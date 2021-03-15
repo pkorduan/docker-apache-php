@@ -1,6 +1,5 @@
 FROM debian:latest
 MAINTAINER Peter Korduan <peter.korduan@gdi-service.de>
-LABEL version="1.0.1"
 
 ARG OS_USER="gisadmin"
 ARG USER_DIR="/home/${OS_USER}"
@@ -30,7 +29,10 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update && apt-get install -y \
     htop \
     php \
     php-cli \
+    php-json \
+    php-gd \
     php-pgsql \
+    php-xml \
     postgresql-client
 
 RUN apt-get clean
@@ -52,4 +54,6 @@ EXPOSE 443
 
 WORKDIR $USER_DIR
 
-CMD /usr/sbin/apache2ctl -d /etc/apache2 -DFOREGROUND
+LABEL version="1.0.4"
+
+CMD ( service cron start & ) && /usr/sbin/apache2ctl -d /etc/apache2 -DFOREGROUND
